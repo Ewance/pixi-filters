@@ -1,6 +1,6 @@
 import {vertex} from '@tools/fragments';
 import fragment from './convolution.frag';
-import * as PIXI from 'pixi.js';
+import {Filter} from '@pixi/core';
 
 /**
  * The ConvolutionFilter class applies a matrix convolution filter effect.
@@ -13,15 +13,21 @@ import * as PIXI from 'pixi.js';
  * @class
  * @extends PIXI.Filter
  * @memberof PIXI.filters
- * @param matrix {number[]} An array of values used for matrix transformation. Specified as a 9 point Array.
- * @param width {number} Width of the object you are transforming
- * @param height {number} Height of the object you are transforming
+ * @see {@link https://www.npmjs.com/package/@pixi/filter-convolution|@pixi/filter-convolution}
+ * @see {@link https://www.npmjs.com/package/pixi-filters|pixi-filters}
+ * @param [matrix=[0,0,0,0,0,0,0,0,0]] {number[]} An array of values used for matrix transformation. Specified as a 9 point Array.
+ * @param [width=200] {number} Width of the object you are transforming
+ * @param [height=200] {number} Height of the object you are transforming
  */
-export default class ConvolutionFilter extends PIXI.Filter {
+class ConvolutionFilter extends Filter {
 
-    constructor(matrix, width, height) {
+    constructor(matrix, width = 200, height = 200) {
         super(vertex, fragment);
-        this.matrix = matrix;
+        this.uniforms.texelSize = new Float32Array(2);
+        this.uniforms.matrix = new Float32Array(9);
+        if (matrix !== undefined) {
+            this.matrix = matrix;
+        }
         this.width = width;
         this.height = height;
     }
@@ -34,8 +40,8 @@ export default class ConvolutionFilter extends PIXI.Filter {
     get matrix() {
         return this.uniforms.matrix;
     }
-    set matrix(value) {
-        this.uniforms.matrix = new Float32Array(value);
+    set matrix(matrix) {
+        matrix.forEach((v, i) => this.uniforms.matrix[i] = v);
     }
 
     /**
@@ -63,3 +69,4 @@ export default class ConvolutionFilter extends PIXI.Filter {
     }
 }
 
+export { ConvolutionFilter };

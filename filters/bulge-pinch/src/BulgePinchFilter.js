@@ -1,6 +1,6 @@
 import {vertex} from '@tools/fragments';
 import fragment from './bulgePinch.frag';
-import * as PIXI from 'pixi.js';
+import {Filter} from '@pixi/core';
 
 /**
  * @author Julien CLEREL @JuloxRox
@@ -14,22 +14,25 @@ import * as PIXI from 'pixi.js';
  * @class
  * @extends PIXI.Filter
  * @memberof PIXI.filters
+ * @see {@link https://www.npmjs.com/package/@pixi/filter-bulge-pinch|@pixi/filter-bulge-pinch}
+ * @see {@link https://www.npmjs.com/package/pixi-filters|pixi-filters}
  * @param {PIXI.Point|Array<number>} [center=[0,0]] The x and y coordinates of the center of the circle of effect.
  * @param {number} [radius=100] The radius of the circle of effect.
  * @param {number} [strength=1] -1 to 1 (-1 is strong pinch, 0 is no effect, 1 is strong bulge)
  */
-export default class BulgePinchFilter extends PIXI.Filter {
+class BulgePinchFilter extends Filter {
 
     constructor(center, radius, strength) {
         super(vertex, fragment);
+        this.uniforms.dimensions = new Float32Array(2);
         this.center = center || [0.5, 0.5];
-        this.radius = radius || 100;
-        this.strength = strength || 1;
+        this.radius = (typeof radius === 'number') ? radius : 100; // allow 0 to be passed
+        this.strength = (typeof strength === 'number') ? strength : 1; // allow 0 to be passed
     }
 
     apply(filterManager, input, output, clear) {
-        this.uniforms.dimensions[0] = input.sourceFrame.width;
-        this.uniforms.dimensions[1] = input.sourceFrame.height;
+        this.uniforms.dimensions[0] = input.filterFrame.width;
+        this.uniforms.dimensions[1] = input.filterFrame.height;
         filterManager.applyFilter(this, input, output, clear);
     }
 
@@ -69,4 +72,6 @@ export default class BulgePinchFilter extends PIXI.Filter {
         this.uniforms.center = value;
     }
 }
+
+export { BulgePinchFilter };
 

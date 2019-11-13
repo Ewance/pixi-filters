@@ -8,7 +8,7 @@ Click [here](http://pixijs.io/pixi-filters/tools/demo/) to interactively play wi
 
 ## Filters
 
-All filters work with PixiJS v4.
+All filters work with PixiJS v5.
 
 | Filter | Preview |
 |---|---|
@@ -18,6 +18,8 @@ All filters work with PixiJS v4.
 | **BevelFilter**<br>_@pixi/filter-bevel_ | ![bevel](https://pixijs.github.io/pixi-filters/tools/screenshots/dist/bevel.png?v=2) |
 | **BloomFilter**<br>_@pixi/filter-bloom_ | ![bloom](https://pixijs.github.io/pixi-filters/tools/screenshots/dist/bloom.png?v=2) |
 | **BulgePinchFilter**<br>_@pixi/filter-bulge-pinch_ | ![bulge-pinch](https://pixijs.github.io/pixi-filters/tools/screenshots/dist/bulge-pinch.gif?v=2) |
+| **ColorMapFilter**<br>_@pixi/filter-color-map_ | ![color-map](https://pixijs.github.io/pixi-filters/tools/screenshots/dist/color-map.png?v=2) |
+| **ColorOverlayFilter**<br>_@pixi/filter-color-overlay_ | ![color-overlay](https://pixijs.github.io/pixi-filters/tools/screenshots/dist/color-overlay.png?v=2) |
 | **ColorReplaceFilter**<br>_@pixi/filter-color-replace_ | ![color-replace](https://pixijs.github.io/pixi-filters/tools/screenshots/dist/color-replace.png?v=2) |
 | **ConvolutionFilter**<br>_@pixi/filter-convolution_ | ![convolution](https://pixijs.github.io/pixi-filters/tools/screenshots/dist/convolution.png?v=2) |
 | **CrossHatchFilter**<br>_@pixi/filter-cross-hatch_ | ![cross-hatch](https://pixijs.github.io/pixi-filters/tools/screenshots/dist/cross-hatch.png?v=2) |
@@ -43,7 +45,7 @@ All filters work with PixiJS v4.
 | **TwistFilter**<br>_@pixi/filter-twist_ | ![twist](https://pixijs.github.io/pixi-filters/tools/screenshots/dist/twist.png?v=2) |
 | **ZoomBlurFilter**<br>_@pixi/filter-zoom-blur_ | ![zoom-blur](https://pixijs.github.io/pixi-filters/tools/screenshots/dist/zoom-blur.png?v=4) |
 
-## Build-In Filters
+## Built-In Filters
 
 PixiJS has a handful of core filters that are built-in to the PixiJS library.
 
@@ -65,11 +67,19 @@ PixiJS has a handful of core filters that are built-in to the PixiJS library.
 
 ## Installation
 
-Using NPM:
+Installation is available using NPM:
 
 ```bash
 npm install pixi-filters
 ```
+
+Alternatively, you can use a CDN such as JSDelivr:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/pixi-filters@latest/dist/pixi-filters.js"></script>
+```
+
+If all else failes, you can manually download the bundled file from the [releases](https://github.com/pixijs/pixi-filters/releases) section and include it in your project.
 
 ## Building
 

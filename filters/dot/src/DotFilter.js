@@ -1,6 +1,6 @@
 import {vertex} from '@tools/fragments';
 import fragment from './dot.frag';
-import * as PIXI from 'pixi.js';
+import {Filter} from '@pixi/core';
 
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
@@ -15,10 +15,12 @@ import * as PIXI from 'pixi.js';
  * @class
  * @extends PIXI.Filter
  * @memberof PIXI.filters
+ * @see {@link https://www.npmjs.com/package/@pixi/filter-dot|@pixi/filter-dot}
+ * @see {@link https://www.npmjs.com/package/pixi-filters|pixi-filters}
  * @param {number} [scale=1] The scale of the effect.
  * @param {number} [angle=5] The radius of the effect.
  */
-export default class DotFilter extends PIXI.Filter {
+class DotFilter extends Filter {
 
     constructor(scale = 1, angle = 5) {
         super(vertex, fragment);
@@ -50,3 +52,5 @@ export default class DotFilter extends PIXI.Filter {
         this.uniforms.angle = value;
     }
 }
+
+export { DotFilter };

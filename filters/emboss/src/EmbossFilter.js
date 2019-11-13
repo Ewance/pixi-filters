@@ -1,6 +1,6 @@
 import {vertex} from '@tools/fragments';
 import fragment from './emboss.frag';
-import * as PIXI from 'pixi.js';
+import {Filter} from '@pixi/core';
 
 /**
  * An RGB Split Filter.<br>
@@ -9,9 +9,11 @@ import * as PIXI from 'pixi.js';
  * @class
  * @extends PIXI.Filter
  * @memberof PIXI.filters
+ * @see {@link https://www.npmjs.com/package/@pixi/filter-emboss|@pixi/filter-emboss}
+ * @see {@link https://www.npmjs.com/package/pixi-filters|pixi-filters}
  * @param {number} [strength=5] Strength of the emboss.
  */
-export default class EmbossFilter extends PIXI.Filter {
+class EmbossFilter extends Filter {
     constructor(strength = 5){
         super(vertex, fragment);
         this.strength = strength;
@@ -29,3 +31,5 @@ export default class EmbossFilter extends PIXI.Filter {
         this.uniforms.strength = value;
     }
 }
+
+export { EmbossFilter };

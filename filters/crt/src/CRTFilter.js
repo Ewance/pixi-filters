@@ -1,6 +1,6 @@
 import {vertex} from '@tools/fragments';
 import fragment from './crt.frag';
-import * as PIXI from 'pixi.js';
+import {Filter} from '@pixi/core';
 
 /**
  * The CRTFilter applies a CRT effect to an object.<br>
@@ -9,6 +9,8 @@ import * as PIXI from 'pixi.js';
  * @class
  * @extends PIXI.Filter
  * @memberof PIXI.filters
+ * @see {@link https://www.npmjs.com/package/@pixi/filter-crt|@pixi/filter-crt}
+ * @see {@link https://www.npmjs.com/package/pixi-filters|pixi-filters}
  *
  * @param {object} [options] - The optional parameters of CRT effect
  * @param {number} [options.curvature=1.0] - Bent of interlaced lines, higher value means more bend
@@ -24,9 +26,10 @@ import * as PIXI from 'pixi.js';
  * @param {number} [options.vignettingBlur=0.3] - Blur intensity of the vignette
  * @param {number} [options.time=0] - For animating interlaced lines
  */
-export default class CRTFilter extends PIXI.Filter {
+class CRTFilter extends Filter {
     constructor(options) {
         super(vertex, fragment);
+        this.uniforms.dimensions = new Float32Array(2);
 
         /**
          * For animating interlaced lines
@@ -64,8 +67,8 @@ export default class CRTFilter extends PIXI.Filter {
      * @private
      */
     apply(filterManager, input, output, clear) {
-        this.uniforms.dimensions[0] = input.sourceFrame.width;
-        this.uniforms.dimensions[1] = input.sourceFrame.height;
+        this.uniforms.dimensions[0] = input.filterFrame.width;
+        this.uniforms.dimensions[1] = input.filterFrame.height;
 
         this.uniforms.seed = this.seed;
         this.uniforms.time = this.time;
@@ -191,3 +194,6 @@ export default class CRTFilter extends PIXI.Filter {
         return this.uniforms.vignettingBlur;
     }
 }
+
+export { CRTFilter };
+

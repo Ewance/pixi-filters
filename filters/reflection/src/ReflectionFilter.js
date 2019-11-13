@@ -1,6 +1,6 @@
 import {vertex} from '@tools/fragments';
 import fragment from './reflection.frag';
-import * as PIXI from 'pixi.js';
+import {Filter} from '@pixi/core';
 
 /**
  * Applies a reflection effect to simulate the reflection on water with waves.<br>
@@ -9,6 +9,8 @@ import * as PIXI from 'pixi.js';
  * @class
  * @extends PIXI.Filter
  * @memberof PIXI.filters
+ * @see {@link https://www.npmjs.com/package/@pixi/filter-reflection|@pixi/filter-reflection}
+ * @see {@link https://www.npmjs.com/package/pixi-filters|pixi-filters}
  *
  * @param {object} [options] - The optional parameters of Reflection effect.
  * @param {number} [options.mirror=true] - `true` to reflect the image, `false` for waves-only
@@ -19,9 +21,13 @@ import * as PIXI from 'pixi.js';
  * @param {number} [options.alpha=[1, 1]] - Starting and ending alpha values
  * @param {number} [options.time=0] - Time for animating position of waves
  */
-export default class ReflectionFilter extends PIXI.Filter {
+class ReflectionFilter extends Filter {
     constructor(options) {
         super(vertex, fragment);
+        this.uniforms.amplitude = new Float32Array(2);
+        this.uniforms.waveLength = new Float32Array(2);
+        this.uniforms.alpha = new Float32Array(2);
+        this.uniforms.dimensions = new Float32Array(2);
 
         Object.assign(this, {
             mirror: true,
@@ -46,8 +52,8 @@ export default class ReflectionFilter extends PIXI.Filter {
      * @private
      */
     apply(filterManager, input, output, clear) {
-        this.uniforms.dimensions[0] = input.sourceFrame.width;
-        this.uniforms.dimensions[1] = input.sourceFrame.height;
+        this.uniforms.dimensions[0] = input.filterFrame.width;
+        this.uniforms.dimensions[1] = input.filterFrame.height;
 
         this.uniforms.time = this.time;
 
@@ -120,3 +126,5 @@ export default class ReflectionFilter extends PIXI.Filter {
         return this.uniforms.alpha;
     }
 }
+
+export { ReflectionFilter };

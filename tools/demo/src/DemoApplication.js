@@ -1,5 +1,15 @@
 import * as filters from 'pixi-filters';
-import * as PIXI from 'pixi.js';
+import {
+    Application,
+    settings,
+    Container,
+    Rectangle,
+    Sprite,
+    TilingSprite,
+    utils,
+    filters as externalFilters } from 'pixi.js';
+
+const { EventEmitter } = utils;
 
 /*global dat,ga*/
 /**
@@ -7,7 +17,7 @@ import * as PIXI from 'pixi.js';
  * @class
  * @extends PIXI.Application
  */
-export default class DemoApplication extends PIXI.Application {
+export default class DemoApplication extends Application {
 
     constructor() {
 
@@ -27,13 +37,15 @@ export default class DemoApplication extends PIXI.Application {
             backgroundColor:0x000000,
         });
 
+        settings.PRECISION_FRAGMENT = 'highp';
+
         this.domElement = domElement;
 
         this.initWidth = initWidth;
         this.initHeight = initHeight;
         this.animating = true;
         this.rendering = true;
-        this.events = new PIXI.utils.EventEmitter();
+        this.events = new EventEmitter();
         this.animateTimer = 0;
         this.bg = null;
         this.pond = null;
@@ -41,9 +53,9 @@ export default class DemoApplication extends PIXI.Application {
         this.fishes = [];
         this.fishFilters = [];
         this.pondFilters = [];
-        this.filterArea = new PIXI.Rectangle();
+        this.filterArea = new Rectangle();
         this.padding = 100;
-        this.bounds = new PIXI.Rectangle(
+        this.bounds = new Rectangle(
             -this.padding,
             -this.padding,
             initWidth + this.padding * 2,
@@ -96,19 +108,19 @@ export default class DemoApplication extends PIXI.Application {
         const {bounds, initWidth, initHeight} = this;
 
         // Setup the container
-        this.pond = new PIXI.Container();
+        this.pond = new Container();
         this.pond.filterArea = this.filterArea;
         this.pond.filters = this.pondFilters;
         this.stage.addChild(this.pond);
 
         // Setup the background image
-        this.bg = new PIXI.Sprite(resources.background.texture);
+        this.bg = new Sprite(resources.background.texture);
         this.pond.addChild(this.bg);
 
         // Create and add the fish
         for (let i = 0; i < this.fishCount; i++) {
             const id = 'fish' + ((i % 4) + 1);
-            const fish = new PIXI.Sprite(resources[id].texture);
+            const fish = new Sprite(resources[id].texture);
             fish.anchor.set(0.5);
             fish.filters = this.fishFilters;
 
@@ -125,7 +137,7 @@ export default class DemoApplication extends PIXI.Application {
         }
 
         // Setup the tiling sprite
-        this.overlay = new PIXI.extras.TilingSprite(
+        this.overlay = new TilingSprite(
             resources.overlay.texture,
             initWidth,
             initHeight
@@ -135,8 +147,8 @@ export default class DemoApplication extends PIXI.Application {
         this.pond.addChild(this.overlay);
 
         // Handle window resize event
-        window.addEventListener('resize', this.resize.bind(this));
-        this.resize();
+        window.addEventListener('resize', this.handleResize.bind(this));
+        this.handleResize();
 
         // Handle fish animation
         this.ticker.add(this.animate, this);
@@ -145,13 +157,13 @@ export default class DemoApplication extends PIXI.Application {
     /**
      * Resize the demo when the window resizes
      */
-    resize() {
+    handleResize() {
 
         const {padding, bg, overlay, filterArea, bounds} = this;
 
         const width = this.domElement.offsetWidth;
         const height = this.domElement.offsetHeight;
-        const filterAreaPadding = 4;
+        const filterAreaPadding = 0;
 
         // Use equivalent of CSS's contain for the background
         // so that it scales proportionally
@@ -273,7 +285,7 @@ export default class DemoApplication extends PIXI.Application {
 
         const app = this;
         const folder = this.gui.addFolder(options.name);
-        const ClassRef = filters[id] || PIXI.filters[id];
+        const ClassRef = filters[id] || externalFilters[id];
 
         if (!ClassRef) {
             throw `Unable to find class name with "${id}"`;

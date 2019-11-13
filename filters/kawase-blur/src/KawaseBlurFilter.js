@@ -1,6 +1,8 @@
 import {vertex} from '@tools/fragments';
 import fragment from './kawase-blur.frag';
-import * as PIXI from 'pixi.js';
+import fragmentClamp from './kawase-blur-clamp.frag';
+import {Filter} from '@pixi/core';
+import {Point} from '@pixi/math';
 
 /**
  * A much faster blur than Gaussian blur, but more complicated to use.<br>
@@ -10,17 +12,22 @@ import * as PIXI from 'pixi.js';
  * @class
  * @extends PIXI.Filter
  * @memberof PIXI.filters
+ * @see {@link https://www.npmjs.com/package/@pixi/filter-kawase-blur|@pixi/filter-kawase-blur}
+ * @see {@link https://www.npmjs.com/package/pixi-filters|pixi-filters}
  * @param {number|number[]} [blur=4] - The blur of the filter. Should be greater than `0`. If
  *        value is an Array, setting kernels.
  * @param {number} [quality=3] - The quality of the filter. Should be an integer greater than `1`.
+ * @param {boolean} [clamp=false] - Clamp edges, useful for removing dark edges
+ *        from fullscreen filters or bleeding to the edge of filterArea.
  */
-export default class KawaseBlurFilter extends PIXI.Filter {
-    constructor(blur = 4, quality = 3) {
-        super(vertex, fragment);
+class KawaseBlurFilter extends Filter {
+    constructor(blur = 4, quality = 3, clamp = false) {
+        super(vertex, clamp ? fragmentClamp : fragment);
+        this.uniforms.uOffset = new Float32Array(2);
 
-        this._pixelSize = new PIXI.Point();
+        this._pixelSize = new Point();
         this.pixelSize = 1;
-
+        this._clamp = clamp;
         this._kernels = null;
 
         // if `blur` is array , as kernels
@@ -31,7 +38,6 @@ export default class KawaseBlurFilter extends PIXI.Filter {
             this._blur = blur;
             this.quality = quality;
         }
-
     }
 
     /**
@@ -39,8 +45,8 @@ export default class KawaseBlurFilter extends PIXI.Filter {
      * @private
      */
     apply(filterManager, input, output, clear) {
-        const uvX = this.pixelSize.x / input.size.width;
-        const uvY = this.pixelSize.y / input.size.height;
+        const uvX = this.pixelSize.x / input._frame.width;
+        const uvY = this.pixelSize.y / input._frame.height;
         let offset;
 
         if (this._quality === 1 || this._blur === 0) {
@@ -50,7 +56,7 @@ export default class KawaseBlurFilter extends PIXI.Filter {
             filterManager.applyFilter(this, input, output, clear);
         }
         else {
-            const renderTarget = filterManager.getRenderTarget(true);
+            const renderTarget = filterManager.getFilterTexture();
 
             let source = input;
             let target = renderTarget;
@@ -73,7 +79,7 @@ export default class KawaseBlurFilter extends PIXI.Filter {
             this.uniforms.uOffset[1] = offset * uvY;
             filterManager.applyFilter(this, source, output, clear);
 
-            filterManager.returnRenderTarget(renderTarget);
+            filterManager.returnFilterTexture(renderTarget);
         }
     }
 
@@ -122,6 +128,17 @@ export default class KawaseBlurFilter extends PIXI.Filter {
     }
 
     /**
+     * Get the if the filter is clampped.
+     *
+     * @readonly
+     * @member {boolean}
+     * @default false
+     */
+    get clamp() {
+        return this._clamp;
+    }
+
+    /**
      * Sets the pixel size of the filter. Large size is blurrier. For advanced usage.
      *
      * @member {PIXI.Point|number[]}
@@ -136,7 +153,7 @@ export default class KawaseBlurFilter extends PIXI.Filter {
             this._pixelSize.x = value[0];
             this._pixelSize.y = value[1];
         }
-        else if (value instanceof PIXI.Point) {
+        else if (value instanceof Point) {
             this._pixelSize.x = value.x;
             this._pixelSize.y = value.y;
         }
@@ -178,3 +195,5 @@ export default class KawaseBlurFilter extends PIXI.Filter {
         this._generateKernels();
     }
 }
+
+export { KawaseBlurFilter };

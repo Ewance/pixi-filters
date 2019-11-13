@@ -327,6 +327,13 @@
             }
         },
         {
+            "name": "ColorOverlayFilter",
+            "filename": "color-overlay",
+            "options": {
+                "color": 16711680
+            }
+        },
+        {
             "name": "ColorReplaceFilter",
             "filename": "color-replace",
             "options": {
@@ -529,6 +536,10 @@
                 "noise": 0.3,
                 "noiseSize": 1.0
             }]
+        },
+        {
+            "name": "ColorMapFilter",
+            "filename": "color-map"
         }
     ]
 }

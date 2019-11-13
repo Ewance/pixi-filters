@@ -1,14 +1,15 @@
 {
   "name": "@pixi/filter-godray",
-  "version": "2.5.0",
-  "main": "lib/filter-godray.js",
-  "description": "PixiJS v4 filter to apply and animate atmospheric light rays",
+  "version": "3.0.3",
+  "main": "lib/filter-godray.cjs.js",
+  "bundle": "dist/filter-godray.js",
+  "description": "PixiJS filter to apply and animate atmospheric light rays",
   "author": "Alain Galvan",
   "contributors": [
     "Matt Karl <matt@mattkarl.com>",
     "Ivan Popelyshevl <ivan.popelyshev@gmail.com>"
   ],
-  "module": "lib/filter-godray.es.js",
+  "module": "lib/filter-godray.esm.js",
   "types": "types.d.ts",
   "homepage": "http://pixijs.com/",
   "bugs": "https://github.com/pixijs/pixi-filters/issues",
@@ -22,12 +23,14 @@
   },
   "files": [
     "lib",
+    "dist",
     "types.d.ts"
   ],
-  "peerDependencies": {
-    "pixi.js": "^4.0.0"
+  "dependencies": {
+    "@pixi/core": "^5.0.0-X",
+    "@pixi/math": "^5.0.0-X"
   },
   "devDependencies": {
-    "@tools/fragments": "^2.0.0"
+    "@tools/fragments": "^3.0.3"
   }
 }

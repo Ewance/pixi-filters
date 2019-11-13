@@ -1,7 +1,7 @@
 import {vertex} from '@tools/fragments';
 import fragment from './simpleLightmap.frag';
-import * as PIXI from 'pixi.js';
-
+import {Filter} from '@pixi/core';
+import {hex2rgb, rgb2hex} from '@pixi/utils';
 /**
 * SimpleLightmap, originally by Oza94
 * http://www.html5gamedevs.com/topic/20027-pixijs-simple-lightmapping/
@@ -15,6 +15,8 @@ import * as PIXI from 'pixi.js';
 * @class
 * @extends PIXI.Filter
 * @memberof PIXI.filters
+ * @see {@link https://www.npmjs.com/package/@pixi/filter-simple-lightmap|@pixi/filter-simple-lightmap}
+ * @see {@link https://www.npmjs.com/package/pixi-filters|pixi-filters}
 * @param {PIXI.Texture} texture a texture where your lightmap is rendered
 * @param {Array<number>|number} [color=0x000000] An RGBA array of the ambient color
 * @param {number} [alpha=1] Default alpha set independent of color (if it's a number, not array).
@@ -22,14 +24,12 @@ import * as PIXI from 'pixi.js';
 * @example
 *  displayObject.filters = [new SimpleLightmapFilter(texture, 0x666666)];
 */
-export default class SimpleLightmapFilter extends PIXI.Filter {
+class SimpleLightmapFilter extends Filter {
 
     constructor(texture, color = 0x000000, alpha = 1) {
         super(vertex, fragment);
-
-        // Set the default for setting color
+        this.uniforms.dimensions = new Float32Array(2);
         this.uniforms.ambientColor = new Float32Array([0, 0, 0, alpha]);
-
         this.texture = texture;
         this.color = color;
     }
@@ -42,8 +42,8 @@ export default class SimpleLightmapFilter extends PIXI.Filter {
      * @param {PIXI.RenderTarget} output - The output target.
      */
     apply(filterManager, input, output, clear) {
-        this.uniforms.dimensions[0] = input.sourceFrame.width;
-        this.uniforms.dimensions[1] = input.sourceFrame.height;
+        this.uniforms.dimensions[0] = input.filterFrame.width;
+        this.uniforms.dimensions[1] = input.filterFrame.height;
 
         // draw the filter...
         filterManager.applyFilter(this, input, output, clear);
@@ -68,7 +68,7 @@ export default class SimpleLightmapFilter extends PIXI.Filter {
     set color(value) {
         const arr = this.uniforms.ambientColor;
         if (typeof value === 'number') {
-            PIXI.utils.hex2rgb(value, arr);
+            hex2rgb(value, arr);
             this._color = value;
         }
         else {
@@ -76,7 +76,7 @@ export default class SimpleLightmapFilter extends PIXI.Filter {
             arr[1] = value[1];
             arr[2] = value[2];
             arr[3] = value[3];
-            this._color = PIXI.utils.rgb2hex(arr);
+            this._color = rgb2hex(arr);
         }
     }
     get color() {
@@ -95,3 +95,4 @@ export default class SimpleLightmapFilter extends PIXI.Filter {
     }
 }
 
+export { SimpleLightmapFilter };

@@ -1,13 +1,14 @@
 {
   "name": "@pixi/filter-emboss",
-  "version": "2.5.0",
-  "main": "lib/filter-emboss.js",
-  "description": "PixiJS v4 filter to apply an emboss effect",
+  "version": "3.0.3",
+  "main": "lib/filter-emboss.cjs.js",
+  "bundle": "dist/filter-emboss.js",
+  "description": "PixiJS filter to apply an emboss effect",
   "author": "Mat Groves",
   "contributors": [
     "Matt Karl <matt@mattkarl.com>"
   ],
-  "module": "lib/filter-emboss.es.js",
+  "module": "lib/filter-emboss.esm.js",
   "types": "types.d.ts",
   "homepage": "http://pixijs.com/",
   "bugs": "https://github.com/pixijs/pixi-filters/issues",
@@ -21,12 +22,13 @@
   },
   "files": [
     "lib",
+    "dist",
     "types.d.ts"
   ],
-  "peerDependencies": {
-    "pixi.js": "^4.0.0"
+  "dependencies": {
+    "@pixi/core": "^5.0.0-X"
   },
   "devDependencies": {
-    "@tools/fragments": "^2.0.0"
+    "@tools/fragments": "^3.0.3"
   }
 }

@@ -1,6 +1,7 @@
 import {vertex} from '@tools/fragments';
 import fragment from './multi-color-replace.frag';
-import * as PIXI from 'pixi.js';
+import {Filter} from '@pixi/core';
+import {hex2rgb, rgb2hex} from '@pixi/utils';
 
 /**
  * Filter for replacing a color with another color. Similar to ColorReplaceFilter, but support multiple
@@ -9,6 +10,8 @@ import * as PIXI from 'pixi.js';
  * @class
  * @extends PIXI.Filter
  * @memberof PIXI.filters
+ * @see {@link https://www.npmjs.com/package/@pixi/filter-multi-color-replace|@pixi/filter-multi-color-replace}
+ * @see {@link https://www.npmjs.com/package/pixi-filters|pixi-filters}
  * @param {Array<Array>} replacements - The collection of replacement items. Each item is color-pair (an array length is 2).
  *                       In the pair, the first value is original color , the second value is target color.
  * @param {number} [epsilon=0.05] - Tolerance of the floating-point comparison between colors
@@ -37,7 +40,7 @@ import * as PIXI from 'pixi.js';
  *  )];
  *
  */
-export default class MultiColorReplaceFilter extends PIXI.Filter {
+class MultiColorReplaceFilter extends Filter {
     constructor(replacements, epsilon = 0.05, maxColors = null) {
         maxColors = maxColors || replacements.length;
 
@@ -74,10 +77,10 @@ export default class MultiColorReplaceFilter extends PIXI.Filter {
             // for original colors
             let color = pair[0];
             if (typeof color === 'number') {
-                color = PIXI.utils.hex2rgb(color);
+                color = hex2rgb(color);
             }
             else {
-                pair[0] = PIXI.utils.rgb2hex(color);
+                pair[0] = rgb2hex(color);
             }
 
             originals[i * 3] = color[0];
@@ -87,10 +90,10 @@ export default class MultiColorReplaceFilter extends PIXI.Filter {
             // for target colors
             let targetColor = pair[1];
             if (typeof targetColor === 'number') {
-                targetColor = PIXI.utils.hex2rgb(targetColor);
+                targetColor = hex2rgb(targetColor);
             }
             else {
-                pair[1] = PIXI.utils.rgb2hex(targetColor);
+                pair[1] = rgb2hex(targetColor);
             }
 
             targets[i * 3] = targetColor[0];
@@ -136,3 +139,5 @@ export default class MultiColorReplaceFilter extends PIXI.Filter {
         return this.uniforms.epsilon;
     }
 }
+
+export { MultiColorReplaceFilter };

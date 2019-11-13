@@ -1,6 +1,7 @@
 import {vertex} from '@tools/fragments';
 import fragment from './outline.frag';
-import * as PIXI from 'pixi.js';
+import {Filter} from '@pixi/core';
+import {rgb2hex, hex2rgb} from '@pixi/utils';
 
 /**
  * OutlineFilter, originally by mishaa
@@ -11,6 +12,8 @@ import * as PIXI from 'pixi.js';
  * @class
  * @extends PIXI.Filter
  * @memberof PIXI.filters
+ * @see {@link https://www.npmjs.com/package/@pixi/filter-outline|@pixi/filter-outline}
+ * @see {@link https://www.npmjs.com/package/pixi-filters|pixi-filters}
  * @param {number} [thickness=1] The tickness of the outline. Make it 2 times more for resolution 2
  * @param {number} [color=0x000000] The color of the outline.
  * @param {number} [quality=0.1] The quality of the outline from `0` to `1`, using a higher quality
@@ -19,7 +22,7 @@ import * as PIXI from 'pixi.js';
  * @example
  *  someSprite.shader = new OutlineFilter(9, 0xFF0000);
  */
-export default class OutlineFilter extends PIXI.Filter {
+class OutlineFilter extends Filter {
 
     constructor(thickness = 1, color = 0x000000, quality = 0.1) {
         const samples =  Math.max(
@@ -29,7 +32,6 @@ export default class OutlineFilter extends PIXI.Filter {
         const angleStep = (Math.PI * 2 / samples).toFixed(7);
 
         super(vertex, fragment.replace(/\$\{angleStep\}/, angleStep));
-
         this.uniforms.thickness = new Float32Array([0, 0]);
 
         /**
@@ -46,8 +48,8 @@ export default class OutlineFilter extends PIXI.Filter {
     }
 
     apply(filterManager, input, output, clear) {
-        this.uniforms.thickness[0] = this.thickness / input.size.width;
-        this.uniforms.thickness[1] = this.thickness / input.size.height;
+        this.uniforms.thickness[0] = this.thickness / input._frame.width;
+        this.uniforms.thickness[1] = this.thickness / input._frame.height;
 
         filterManager.applyFilter(this, input, output, clear);
     }
@@ -58,10 +60,10 @@ export default class OutlineFilter extends PIXI.Filter {
      * @default 0x000000
      */
     get color() {
-        return PIXI.utils.rgb2hex(this.uniforms.outlineColor);
+        return rgb2hex(this.uniforms.outlineColor);
     }
     set color(value) {
-        PIXI.utils.hex2rgb(value, this.uniforms.outlineColor);
+        hex2rgb(value, this.uniforms.outlineColor);
     }
 }
 
@@ -82,3 +84,5 @@ OutlineFilter.MIN_SAMPLES = 1;
  * @default 100
  */
 OutlineFilter.MAX_SAMPLES = 100;
+
+export { OutlineFilter };

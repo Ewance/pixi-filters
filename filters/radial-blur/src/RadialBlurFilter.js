@@ -1,6 +1,6 @@
 import {vertex} from '@tools/fragments';
 import fragment from './radial-blur.frag';
-import * as PIXI from 'pixi.js';
+import {Filter} from '@pixi/core';
 
 /**
  * The RadialBlurFilter applies a Motion blur to an object.<br>
@@ -9,12 +9,14 @@ import * as PIXI from 'pixi.js';
  * @class
  * @extends PIXI.Filter
  * @memberof PIXI.filters
+ * @see {@link https://www.npmjs.com/package/@pixi/filter-radial-blur|@pixi/filter-radial-blur}
+ * @see {@link https://www.npmjs.com/package/pixi-filters|pixi-filters}
  * @param {number} [angle=0] Sets the angle of the motion for blur effect.
  * @param {PIXI.Point|number[]} [center=[0,0]] The center of the radial.
  * @param {number} [kernelSize=5] - The kernelSize of the blur filter. But be odd number >= 3
  * @param {number} [radius=-1] - The maximum size of the blur radius, `-1` is infinite
  */
-export default class RadialBlurFilter extends PIXI.Filter {
+class RadialBlurFilter extends Filter {
     constructor(angle = 0, center = [0, 0], kernelSize = 5, radius = -1) {
         super(vertex, fragment);
 
@@ -80,3 +82,6 @@ export default class RadialBlurFilter extends PIXI.Filter {
         this.uniforms.uRadius = value;
     }
 }
+
+export { RadialBlurFilter };
+

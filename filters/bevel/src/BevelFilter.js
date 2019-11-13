@@ -1,6 +1,8 @@
 import {vertex} from '@tools/fragments';
 import fragment from './bevel.frag';
-import * as PIXI from 'pixi.js';
+import {Filter} from '@pixi/core';
+import {DEG_TO_RAD} from '@pixi/math';
+import {rgb2hex, hex2rgb} from '@pixi/utils';
 
 /**
  * Bevel Filter.<br>
@@ -9,6 +11,8 @@ import * as PIXI from 'pixi.js';
  * @class
  * @extends PIXI.Filter
  * @memberof PIXI.filters
+ * @see {@link https://www.npmjs.com/package/@pixi/filter-bevel|@pixi/filter-bevel}
+ * @see {@link https://www.npmjs.com/package/pixi-filters|pixi-filters}
  * @param {object} [options] - The optional parameters of the filter.
  * @param {number} [options.rotation = 45] - The angle of the light in degrees.
  * @param {number} [options.thickness = 2] - The tickness of the bevel.
@@ -17,9 +21,12 @@ import * as PIXI from 'pixi.js';
  * @param {number} [options.shadowColor = 0x000000] - Color of the shadow.
  * @param {number} [options.shadowAlpha = 0.7] - Alpha of the shadow.
  */
-export default class BevelFilter extends PIXI.Filter {
+class BevelFilter extends Filter {
     constructor(options = {}) {
         super(vertex, fragment);
+
+        this.uniforms.lightColor = new Float32Array(3);
+        this.uniforms.shadowColor = new Float32Array(3);
 
         options = Object.assign({
             rotation: 45,
@@ -84,10 +91,10 @@ export default class BevelFilter extends PIXI.Filter {
     }
 
     get rotation() {
-        return this._angle / PIXI.DEG_TO_RAD;
+        return this._angle / DEG_TO_RAD;
     }
     set rotation(value) {
-        this._angle = value * PIXI.DEG_TO_RAD;
+        this._angle = value * DEG_TO_RAD;
         this._updateTransform();
     }
 
@@ -100,10 +107,10 @@ export default class BevelFilter extends PIXI.Filter {
     }
 
     get lightColor() {
-        return PIXI.utils.rgb2hex(this.uniforms.lightColor);
+        return rgb2hex(this.uniforms.lightColor);
     }
     set lightColor(value) {
-        PIXI.utils.hex2rgb(value, this.uniforms.lightColor);
+        hex2rgb(value, this.uniforms.lightColor);
     }
 
     get lightAlpha() {
@@ -114,10 +121,10 @@ export default class BevelFilter extends PIXI.Filter {
     }
 
     get shadowColor() {
-        return PIXI.utils.rgb2hex(this.uniforms.shadowColor);
+        return rgb2hex(this.uniforms.shadowColor);
     }
     set shadowColor(value) {
-        PIXI.utils.hex2rgb(value, this.uniforms.shadowColor);
+        hex2rgb(value, this.uniforms.shadowColor);
     }
 
     get shadowAlpha() {
@@ -127,3 +134,5 @@ export default class BevelFilter extends PIXI.Filter {
         this.uniforms.shadowAlpha = value;
     }
 }
+
+export { BevelFilter };

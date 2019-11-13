@@ -1,6 +1,6 @@
 import {vertex} from '@tools/fragments';
 import fragment from './old-film.frag';
-import * as PIXI from 'pixi.js';
+import {Filter} from '@pixi/core';
 
 /**
  * The OldFilmFilter applies a Old film effect to an object.<br>
@@ -9,6 +9,8 @@ import * as PIXI from 'pixi.js';
  * @class
  * @extends PIXI.Filter
  * @memberof PIXI.filters
+ * @see {@link https://www.npmjs.com/package/@pixi/filter-old-film|@pixi/filter-old-film}
+ * @see {@link https://www.npmjs.com/package/pixi-filters|pixi-filters}
  *
  * @param {object|number} [options] - The optional parameters of old film effect.
  *                        When options is a number , it will be `seed`
@@ -26,9 +28,10 @@ import * as PIXI from 'pixi.js';
  * @param {number} [options.vignettingBlur=0.3] - Blur intensity of the vignette
  * @param {number} [seed=0] - A see value to apply to the random noise generation
  */
-export default class OldFilmFilter extends PIXI.Filter {
+class OldFilmFilter extends Filter {
     constructor(options, seed = 0) {
         super(vertex, fragment);
+        this.uniforms.dimensions = new Float32Array(2);
 
         if (typeof options === 'number') {
             this.seed = options;
@@ -60,8 +63,8 @@ export default class OldFilmFilter extends PIXI.Filter {
      * @private
      */
     apply(filterManager, input, output, clear) {
-        this.uniforms.dimensions[0] = input.sourceFrame.width;
-        this.uniforms.dimensions[1] = input.sourceFrame.height;
+        this.uniforms.dimensions[0] = input.filterFrame.width;
+        this.uniforms.dimensions[1] = input.filterFrame.height;
 
         // named `seed` because in the most programming languages,
         // `random` used for "the function for generating random value".
@@ -200,3 +203,5 @@ export default class OldFilmFilter extends PIXI.Filter {
         return this.uniforms.vignettingBlur;
     }
 }
+
+export { OldFilmFilter };

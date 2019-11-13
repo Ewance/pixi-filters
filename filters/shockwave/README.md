@@ -1,17 +1,17 @@
 # ShockwaveFilter
 
-PixiJS v4 filter to apply a shockwave-type effect.
+PixiJS filter to apply a shockwave-type effect.
 
 ## Installation
 
 ```bash
-npm install @pixi/filter-ascii
+npm install @pixi/filter-shockwave
 ```
 
 ## Usage
 
 ```js
-import {ShockwaveFilter} from '@pixi/filter-ascii';
+import {ShockwaveFilter} from '@pixi/filter-shockwave';
 import {Container} from 'pixi.js';
 
 const container = new Container();
